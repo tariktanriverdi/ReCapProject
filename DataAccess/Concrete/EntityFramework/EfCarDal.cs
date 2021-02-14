@@ -1,5 +1,8 @@
-﻿using DataAccess.Abstract;
+﻿
+using Core.DataAccess.EntityFramework;
+using DataAccess.Abstract;
 using Entities.Concrete;
+using Entities.DTOs;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -9,45 +12,19 @@ using System.Text;
 
 namespace DataAccess.Concrete.EntityFramework
 {
-public	class EfCarDal : ICarDal
+	public class EfCarDal : EfEntityRepositoryBase<Car, MyDBContext>, ICarDal
 	{
-		public void Add(Car entity)
-		{   
-			using(MyDBContext context=new MyDBContext())
-			{
-				var addedCar = context.Entry(entity);
-				addedCar.State = EntityState.Added;
-				context.SaveChanges();
+		public List<CarDetailDto> GetCarDetails()
+		{
+			using (MyDBContext context =new MyDBContext()) {
+				var result = from c in context.Cars
+							 join
+	        b in context.Brands on c.BrandId equals b.Id
+							 select new CarDetailDto { BrandName = b.BrandName, Id = c.Id ,Description=b.Description};
+				return result.ToList();
+
+
 			}
-			Console.WriteLine("added");
-		}
-
-		public void Delete(Car entity)
-		{
-			throw new NotImplementedException();
-		}
-
-		public List<Car> GetAll(Expression<Func<Car, bool>> filter = null)
-		{
-			using (MyDBContext context = new MyDBContext())
-			{
-				return filter == null
-					? context.Set<Car>().ToList()
-					: context.Set<Car>().Where(filter).ToList();
-			}
-		}
-
-		public Car GetById(Expression<Func<Car, bool>> filter )
-		{
-			using (MyDBContext context = new MyDBContext())
-			{
-				return context.Set<Car>().SingleOrDefault(filter);
-			}
-		}
-
-		public void Update(Car entity)
-		{
-			throw new NotImplementedException();
 		}
 	}
 }

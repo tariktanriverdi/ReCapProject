@@ -14,6 +14,7 @@ namespace ConsoleUI
 			//carManager.Add(newCar);
 			carManager.GetAll().ForEach(f => Console.WriteLine(f.Description));
 			Console.WriteLine(carManager.GetById(x => x.Id.Equals(1)).Description);
+			carManager.GetCarDetails().ForEach(cd => Console.WriteLine(cd.BrandName +" "+cd.Description));
 		}
 	}
 }

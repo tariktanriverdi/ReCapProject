@@ -2,6 +2,7 @@
 using DataAccess.Abstract;
 using DataAccess.Concrete.EntityFramework;
 using Entities.Concrete;
+using Entities.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
@@ -36,6 +37,11 @@ namespace Business.Concrete
 		public Car GetById(Expression<Func<Car, bool>> filter)
 		{
 			return _service.GetById(filter);
+		}
+
+		public List<CarDetailDto> GetCarDetails()
+		{
+			return _service.GetCarDetails();
 		}
 
 		public void Update(Car car)
